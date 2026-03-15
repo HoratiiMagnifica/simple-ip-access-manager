@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 from fastapi import Request, HTTPException
-from passlib.context import CryptContext
 from datetime import datetime, timedelta
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+import bcrypt
+import secrets
 
 class AuthManager:
     def __init__(self, admin_password):
@@ -11,7 +10,18 @@ class AuthManager:
         self.sessions = {}
     
     def verify_password(self, password):
-        return pwd_context.verify(password, self.admin_password)
+        try:
+            if not self.admin_password or not password:
+                return False
+            stored = self.admin_password
+            if isinstance(stored, str):
+                stored = stored.encode('utf-8')
+            return bcrypt.checkpw(
+                password.encode('utf-8'),
+                stored
+            )
+        except Exception:
+            return False
     
     def create_session(self, token):
         self.sessions[token] = datetime.now() + timedelta(hours=24)
@@ -20,12 +30,20 @@ class AuthManager:
         if token in self.sessions:
             if self.sessions[token] > datetime.now():
                 return True
-            else:
-                del self.sessions[token]
+            del self.sessions[token]
         return False
 
 def hash_password(password):
-    return pwd_context.hash(password)
+    try:
+        password_bytes = password.encode('utf-8')
+        if len(password_bytes) > 72:
+            password_bytes = password_bytes[:72]
+        salt = bcrypt.gensalt(rounds=12)
+        hashed = bcrypt.hashpw(password_bytes, salt)
+        return hashed.decode('utf-8')
+    except Exception as e:
+        print(f"Hash error: {e}")
+        return None
 
 async def get_current_user(request: Request):
     token = request.cookies.get("session")
