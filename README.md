@@ -7,4 +7,8 @@ Simple IP-based access control for SSH and FTP.
 ```bash
 git clone https://github.com/HoratiiMagnifica/ip-access-manager
 cd ip-access-manager
-sudo python3 main.py
+chmod +x install.sh uninstall.sh
+./install.sh
+#make a secure password
+#goto http://urip/login
+#profit!
