@@ -10,5 +10,5 @@ cd ip-access-manager
 chmod +x install.sh uninstall.sh
 ./install.sh
 #make a secure password
-#goto http://urip/login
+#goto http://urip:8443/login
 #profit!
