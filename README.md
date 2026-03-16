@@ -12,3 +12,5 @@ chmod +x install.sh uninstall.sh
 #make a secure password
 #goto http://urip:8443/login
 #profit!
+```
+![Image Alt](https://raw.githubusercontent.com/HoratiiMagnifica/simple-ip-access-manager/d957b5b239ebbb4de56dd84b3346d7e1bdf73485/example.png)
